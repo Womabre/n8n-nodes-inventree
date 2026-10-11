@@ -9,4 +9,5 @@ yarn.lock
 *.tsbuildinfo
 coverage
 ISA.md
+ISA.html
 .claude

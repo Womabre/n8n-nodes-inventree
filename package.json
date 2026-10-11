@@ -1,0 +1,69 @@
+{
+	"name": "n8n-nodes-inventree",
+	"version": "0.1.0",
+	"publisher": "Womabre",
+	"description": "n8n community node for the InvenTree open-source inventory, parts and BOM management API",
+	"license": "MIT",
+	"keywords": [
+		"n8n-community-node-package",
+		"n8n",
+		"inventree",
+		"inventory",
+		"stock",
+		"bom",
+		"purchase-order",
+		"manufacturing",
+		"self-hosted"
+	],
+	"homepage": "https://github.com/Womabre/n8n-nodes-inventree",
+	"author": {
+		"name": "Wouter Breedveld",
+		"email": "w.m.breedveld@gmail.com"
+	},
+	"repository": {
+		"type": "git",
+		"url": "https://github.com/Womabre/n8n-nodes-inventree.git"
+	},
+	"engines": {
+		"node": ">=20.15"
+	},
+	"scripts": {
+		"build": "n8n-node build",
+		"build:watch": "tsc --watch",
+		"dev": "n8n-node dev",
+		"format": "prettier nodes credentials --write",
+		"lint": "n8n-node lint",
+		"lint:fix": "n8n-node lint --fix",
+		"release": "release-it",
+		"test": "vitest run",
+		"test:watch": "vitest",
+		"prepublishOnly": "n8n-node prerelease"
+	},
+	"files": [
+		"dist"
+	],
+	"n8n": {
+		"n8nNodesApiVersion": 1,
+		"strict": true,
+		"credentials": [
+			"dist/credentials/InvenTreeApi.credentials.js"
+		],
+		"nodes": [
+			"dist/nodes/InvenTree/InvenTree.node.js"
+		]
+	},
+	"devDependencies": {
+		"@n8n/node-cli": "^0.51.2",
+		"@types/luxon": "^3.7.6",
+		"@types/node": "^24.1.0",
+		"@vitest/coverage-v8": "^4.1.2",
+		"eslint": "9.32.0",
+		"prettier": "3.6.2",
+		"release-it": "^19.0.4",
+		"typescript": "5.9.2",
+		"vitest": "^4.1.2"
+	},
+	"peerDependencies": {
+		"n8n-workflow": "*"
+	}
+}

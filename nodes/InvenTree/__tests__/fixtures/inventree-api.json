@@ -1,0 +1,2277 @@
+{
+	"source": "https://raw.githubusercontent.com/inventree/schema/main/export/530/api.yaml",
+	"apiVersion": "530",
+	"paths": {
+		"/bom/": {
+			"get": {
+				"query": [
+					"allow_variants",
+					"available_stock",
+					"can_build",
+					"category",
+					"consumable",
+					"has_pricing",
+					"inherited",
+					"limit",
+					"offset",
+					"on_order",
+					"optional",
+					"ordering",
+					"part",
+					"part_active",
+					"part_detail",
+					"part_locked",
+					"part_testable",
+					"part_trackable",
+					"pricing",
+					"search",
+					"sub_part_active",
+					"sub_part_assembly",
+					"sub_part_detail",
+					"sub_part_testable",
+					"sub_part_trackable",
+					"sub_part_virtual",
+					"substitutes",
+					"uses",
+					"validated"
+				],
+				"body": []
+			},
+			"post": {
+				"query": [],
+				"body": [
+					"allow_variants",
+					"attrition",
+					"consumable",
+					"inherited",
+					"note",
+					"optional",
+					"part",
+					"quantity",
+					"raw_amount",
+					"reference",
+					"rounding_multiple",
+					"setup_quantity",
+					"sub_part",
+					"validated"
+				]
+			},
+			"put": {
+				"query": [],
+				"body": [
+					"allow_variants",
+					"attrition",
+					"consumable",
+					"inherited",
+					"note",
+					"optional",
+					"part",
+					"quantity",
+					"raw_amount",
+					"reference",
+					"rounding_multiple",
+					"setup_quantity",
+					"sub_part",
+					"validated"
+				]
+			},
+			"patch": {
+				"query": [],
+				"body": [
+					"allow_variants",
+					"attrition",
+					"consumable",
+					"inherited",
+					"note",
+					"optional",
+					"part",
+					"quantity",
+					"raw_amount",
+					"reference",
+					"rounding_multiple",
+					"setup_quantity",
+					"sub_part",
+					"validated"
+				]
+			},
+			"delete": {
+				"query": [],
+				"body": ["filters", "items"],
+				"bodyItems": []
+			}
+		},
+		"/bom/{id}/": {
+			"get": {
+				"query": ["can_build", "part_detail", "pricing", "sub_part_detail", "substitutes"],
+				"body": []
+			},
+			"put": {
+				"query": [],
+				"body": [
+					"allow_variants",
+					"attrition",
+					"consumable",
+					"inherited",
+					"note",
+					"optional",
+					"part",
+					"quantity",
+					"raw_amount",
+					"reference",
+					"rounding_multiple",
+					"setup_quantity",
+					"sub_part",
+					"validated"
+				]
+			},
+			"patch": {
+				"query": [],
+				"body": [
+					"allow_variants",
+					"attrition",
+					"consumable",
+					"inherited",
+					"note",
+					"optional",
+					"part",
+					"quantity",
+					"raw_amount",
+					"reference",
+					"rounding_multiple",
+					"setup_quantity",
+					"sub_part",
+					"validated"
+				]
+			},
+			"delete": {
+				"query": [],
+				"body": []
+			}
+		},
+		"/bom/{id}/validate/": {
+			"put": {
+				"query": [],
+				"body": ["valid"]
+			},
+			"patch": {
+				"query": [],
+				"body": ["valid"]
+			}
+		},
+		"/bom/substitute/": {
+			"get": {
+				"query": ["bom_item", "limit", "offset", "ordering", "part", "search"],
+				"body": []
+			},
+			"post": {
+				"query": [],
+				"body": ["bom_item", "part"]
+			}
+		},
+		"/bom/substitute/{id}/": {
+			"get": {
+				"query": [],
+				"body": []
+			},
+			"put": {
+				"query": [],
+				"body": ["bom_item", "part"]
+			},
+			"patch": {
+				"query": [],
+				"body": ["bom_item", "part"]
+			},
+			"delete": {
+				"query": [],
+				"body": []
+			}
+		},
+		"/company/": {
+			"get": {
+				"query": [
+					"active",
+					"is_customer",
+					"is_manufacturer",
+					"is_supplier",
+					"limit",
+					"name",
+					"offset",
+					"ordering",
+					"search",
+					"tags"
+				],
+				"body": []
+			},
+			"post": {
+				"query": [],
+				"body": [
+					"active",
+					"contact",
+					"currency",
+					"description",
+					"duplicate",
+					"email",
+					"image",
+					"is_customer",
+					"is_manufacturer",
+					"is_supplier",
+					"link",
+					"name",
+					"notes",
+					"phone",
+					"tags",
+					"tax_id",
+					"website"
+				]
+			}
+		},
+		"/company/{id}/": {
+			"get": {
+				"query": [],
+				"body": []
+			},
+			"put": {
+				"query": [],
+				"body": [
+					"active",
+					"contact",
+					"currency",
+					"description",
+					"duplicate",
+					"email",
+					"image",
+					"is_customer",
+					"is_manufacturer",
+					"is_supplier",
+					"link",
+					"name",
+					"notes",
+					"phone",
+					"tags",
+					"tax_id",
+					"website"
+				]
+			},
+			"patch": {
+				"query": [],
+				"body": [
+					"active",
+					"contact",
+					"currency",
+					"description",
+					"duplicate",
+					"email",
+					"image",
+					"is_customer",
+					"is_manufacturer",
+					"is_supplier",
+					"link",
+					"name",
+					"notes",
+					"phone",
+					"tags",
+					"tax_id",
+					"website"
+				]
+			},
+			"delete": {
+				"query": [],
+				"body": []
+			}
+		},
+		"/company/address/": {
+			"get": {
+				"query": ["company", "limit", "offset", "ordering", "search"],
+				"body": []
+			},
+			"post": {
+				"query": [],
+				"body": [
+					"company",
+					"country",
+					"internal_shipping_notes",
+					"line1",
+					"line2",
+					"link",
+					"postal_city",
+					"postal_code",
+					"primary",
+					"province",
+					"shipping_notes",
+					"title"
+				]
+			},
+			"delete": {
+				"query": [],
+				"body": ["filters", "items"],
+				"bodyItems": []
+			}
+		},
+		"/company/address/{id}/": {
+			"get": {
+				"query": [],
+				"body": []
+			},
+			"put": {
+				"query": [],
+				"body": [
+					"company",
+					"country",
+					"internal_shipping_notes",
+					"line1",
+					"line2",
+					"link",
+					"postal_city",
+					"postal_code",
+					"primary",
+					"province",
+					"shipping_notes",
+					"title"
+				]
+			},
+			"patch": {
+				"query": [],
+				"body": [
+					"company",
+					"country",
+					"internal_shipping_notes",
+					"line1",
+					"line2",
+					"link",
+					"postal_city",
+					"postal_code",
+					"primary",
+					"province",
+					"shipping_notes",
+					"title"
+				]
+			},
+			"delete": {
+				"query": [],
+				"body": []
+			}
+		},
+		"/company/contact/": {
+			"get": {
+				"query": ["company", "limit", "offset", "ordering", "search"],
+				"body": []
+			},
+			"post": {
+				"query": [],
+				"body": ["company", "email", "name", "phone", "role"]
+			},
+			"delete": {
+				"query": [],
+				"body": ["filters", "items"],
+				"bodyItems": []
+			}
+		},
+		"/company/contact/{id}/": {
+			"get": {
+				"query": [],
+				"body": []
+			},
+			"put": {
+				"query": [],
+				"body": ["company", "email", "name", "phone", "role"]
+			},
+			"patch": {
+				"query": [],
+				"body": ["company", "email", "name", "phone", "role"]
+			},
+			"delete": {
+				"query": [],
+				"body": []
+			}
+		},
+		"/company/part/": {
+			"get": {
+				"query": [
+					"MPN",
+					"SKU",
+					"active",
+					"company",
+					"has_stock",
+					"limit",
+					"manufacturer",
+					"manufacturer_detail",
+					"manufacturer_part",
+					"manufacturer_part_detail",
+					"offset",
+					"ordering",
+					"part",
+					"part_active",
+					"part_detail",
+					"pretty",
+					"primary",
+					"search",
+					"supplier",
+					"supplier_active",
+					"supplier_detail",
+					"tags",
+					"tags__name",
+					"tags__slug"
+				],
+				"body": []
+			},
+			"post": {
+				"query": [],
+				"body": [
+					"SKU",
+					"active",
+					"available",
+					"description",
+					"duplicate",
+					"link",
+					"manufacturer_part",
+					"note",
+					"notes",
+					"pack_quantity",
+					"packaging",
+					"part",
+					"primary",
+					"supplier",
+					"tags"
+				]
+			},
+			"delete": {
+				"query": [],
+				"body": ["filters", "items"],
+				"bodyItems": []
+			}
+		},
+		"/company/part/{id}/": {
+			"get": {
+				"query": [
+					"manufacturer_detail",
+					"manufacturer_part_detail",
+					"part_detail",
+					"pretty",
+					"supplier_detail"
+				],
+				"body": []
+			},
+			"put": {
+				"query": [],
+				"body": [
+					"SKU",
+					"active",
+					"available",
+					"description",
+					"duplicate",
+					"link",
+					"manufacturer_part",
+					"note",
+					"notes",
+					"pack_quantity",
+					"packaging",
+					"part",
+					"primary",
+					"supplier",
+					"tags"
+				]
+			},
+			"patch": {
+				"query": [],
+				"body": [
+					"SKU",
+					"active",
+					"available",
+					"description",
+					"duplicate",
+					"link",
+					"manufacturer_part",
+					"note",
+					"notes",
+					"pack_quantity",
+					"packaging",
+					"part",
+					"primary",
+					"supplier",
+					"tags"
+				]
+			},
+			"delete": {
+				"query": [],
+				"body": []
+			}
+		},
+		"/company/part/manufacturer/": {
+			"get": {
+				"query": [
+					"MPN",
+					"limit",
+					"manufacturer",
+					"manufacturer_active",
+					"manufacturer_detail",
+					"offset",
+					"ordering",
+					"part",
+					"part_active",
+					"part_detail",
+					"pretty",
+					"search",
+					"tags",
+					"tags__name",
+					"tags__slug"
+				],
+				"body": []
+			},
+			"post": {
+				"query": [],
+				"body": [
+					"MPN",
+					"barcode_hash",
+					"description",
+					"duplicate",
+					"link",
+					"manufacturer",
+					"notes",
+					"part",
+					"tags"
+				]
+			},
+			"delete": {
+				"query": [],
+				"body": ["filters", "items"],
+				"bodyItems": []
+			}
+		},
+		"/company/part/manufacturer/{id}/": {
+			"get": {
+				"query": [],
+				"body": []
+			},
+			"put": {
+				"query": [],
+				"body": [
+					"MPN",
+					"barcode_hash",
+					"description",
+					"duplicate",
+					"link",
+					"manufacturer",
+					"notes",
+					"part",
+					"tags"
+				]
+			},
+			"patch": {
+				"query": [],
+				"body": [
+					"MPN",
+					"barcode_hash",
+					"description",
+					"duplicate",
+					"link",
+					"manufacturer",
+					"notes",
+					"part",
+					"tags"
+				]
+			},
+			"delete": {
+				"query": [],
+				"body": []
+			}
+		},
+		"/company/price-break/": {
+			"get": {
+				"query": [
+					"base_part",
+					"limit",
+					"offset",
+					"ordering",
+					"part",
+					"part_detail",
+					"quantity",
+					"search",
+					"supplier",
+					"supplier_detail"
+				],
+				"body": []
+			},
+			"post": {
+				"query": [],
+				"body": ["part", "price", "price_currency", "quantity"]
+			}
+		},
+		"/company/price-break/{id}/": {
+			"get": {
+				"query": [],
+				"body": []
+			},
+			"put": {
+				"query": [],
+				"body": ["part", "price", "price_currency", "quantity"]
+			},
+			"patch": {
+				"query": [],
+				"body": ["part", "price", "price_currency", "quantity"]
+			},
+			"delete": {
+				"query": [],
+				"body": []
+			}
+		},
+		"/order/po/": {
+			"get": {
+				"query": [
+					"assigned_to",
+					"assigned_to_me",
+					"completed_after",
+					"completed_before",
+					"created_after",
+					"created_before",
+					"created_by",
+					"external_build",
+					"has_project_code",
+					"has_start_date",
+					"has_target_date",
+					"limit",
+					"max_date",
+					"min_date",
+					"offset",
+					"ordering",
+					"outstanding",
+					"overdue",
+					"part",
+					"project_code",
+					"reference",
+					"search",
+					"start_date_after",
+					"start_date_before",
+					"status",
+					"supplier",
+					"supplier_detail",
+					"supplier_part",
+					"tags",
+					"target_date_after",
+					"target_date_before",
+					"updated_after",
+					"updated_before"
+				],
+				"body": []
+			},
+			"post": {
+				"query": [],
+				"body": [
+					"address",
+					"contact",
+					"creation_date",
+					"description",
+					"destination",
+					"duplicate",
+					"link",
+					"notes",
+					"order_currency",
+					"project_code",
+					"reference",
+					"responsible",
+					"start_date",
+					"status_custom_key",
+					"supplier",
+					"supplier_reference",
+					"tags",
+					"target_date"
+				]
+			}
+		},
+		"/order/po-line/": {
+			"get": {
+				"query": [
+					"base_part",
+					"has_pricing",
+					"include_variants",
+					"limit",
+					"offset",
+					"order",
+					"order_complete",
+					"order_detail",
+					"order_status",
+					"ordering",
+					"part",
+					"part_detail",
+					"pending",
+					"received",
+					"search"
+				],
+				"body": []
+			},
+			"post": {
+				"query": [],
+				"body": [
+					"auto_pricing",
+					"build_order",
+					"destination",
+					"discount",
+					"line",
+					"link",
+					"merge_items",
+					"notes",
+					"order",
+					"part",
+					"project_code",
+					"purchase_price",
+					"purchase_price_currency",
+					"quantity",
+					"reference",
+					"target_date"
+				]
+			},
+			"delete": {
+				"query": [],
+				"body": ["filters", "items"],
+				"bodyItems": []
+			}
+		},
+		"/order/po-line/{id}/": {
+			"get": {
+				"query": ["order_detail", "part_detail"],
+				"body": []
+			},
+			"put": {
+				"query": [],
+				"body": [
+					"auto_pricing",
+					"build_order",
+					"destination",
+					"discount",
+					"line",
+					"link",
+					"merge_items",
+					"notes",
+					"order",
+					"part",
+					"project_code",
+					"purchase_price",
+					"purchase_price_currency",
+					"quantity",
+					"reference",
+					"target_date"
+				]
+			},
+			"patch": {
+				"query": [],
+				"body": [
+					"auto_pricing",
+					"build_order",
+					"destination",
+					"discount",
+					"line",
+					"link",
+					"merge_items",
+					"notes",
+					"order",
+					"part",
+					"project_code",
+					"purchase_price",
+					"purchase_price_currency",
+					"quantity",
+					"reference",
+					"target_date"
+				]
+			},
+			"delete": {
+				"query": [],
+				"body": []
+			}
+		},
+		"/order/po/{id}/": {
+			"get": {
+				"query": ["supplier_detail"],
+				"body": []
+			},
+			"put": {
+				"query": [],
+				"body": [
+					"address",
+					"contact",
+					"creation_date",
+					"description",
+					"destination",
+					"duplicate",
+					"link",
+					"notes",
+					"order_currency",
+					"project_code",
+					"reference",
+					"responsible",
+					"start_date",
+					"status_custom_key",
+					"supplier",
+					"supplier_reference",
+					"tags",
+					"target_date"
+				]
+			},
+			"patch": {
+				"query": [],
+				"body": [
+					"address",
+					"contact",
+					"creation_date",
+					"description",
+					"destination",
+					"duplicate",
+					"link",
+					"notes",
+					"order_currency",
+					"project_code",
+					"reference",
+					"responsible",
+					"start_date",
+					"status_custom_key",
+					"supplier",
+					"supplier_reference",
+					"tags",
+					"target_date"
+				]
+			},
+			"delete": {
+				"query": [],
+				"body": []
+			}
+		},
+		"/order/po/{id}/cancel/": {
+			"post": {
+				"query": [],
+				"body": []
+			}
+		},
+		"/order/po/{id}/complete/": {
+			"post": {
+				"query": [],
+				"body": ["accept_incomplete"]
+			}
+		},
+		"/order/po/{id}/hold/": {
+			"post": {
+				"query": [],
+				"body": []
+			}
+		},
+		"/order/po/{id}/issue/": {
+			"post": {
+				"query": [],
+				"body": []
+			}
+		},
+		"/order/po/{id}/receive/": {
+			"post": {
+				"query": [],
+				"body": ["items", "location"],
+				"bodyItems": [
+					"barcode",
+					"batch_code",
+					"expiry_date",
+					"line_item",
+					"location",
+					"note",
+					"packaging",
+					"quantity",
+					"serial_numbers",
+					"status"
+				]
+			}
+		},
+		"/order/po/status/": {
+			"get": {
+				"query": [],
+				"body": []
+			}
+		},
+		"/part/": {
+			"get": {
+				"query": [
+					"IPN",
+					"IPN_regex",
+					"active",
+					"ancestor",
+					"assembly",
+					"bom_valid",
+					"cascade",
+					"category",
+					"category_detail",
+					"component",
+					"consumable",
+					"convert_from",
+					"created_after",
+					"created_before",
+					"default_location",
+					"depleted_stock",
+					"exclude_id",
+					"exclude_related",
+					"exclude_tree",
+					"has_ipn",
+					"has_pricing",
+					"has_revisions",
+					"has_stock",
+					"has_units",
+					"high_stock",
+					"in_bom_for",
+					"is_revision",
+					"is_template",
+					"is_variant",
+					"limit",
+					"location_detail",
+					"locked",
+					"low_stock",
+					"name_regex",
+					"offset",
+					"on_order",
+					"ordering",
+					"parameters",
+					"path_detail",
+					"price_breaks",
+					"purchaseable",
+					"related",
+					"revision_of",
+					"salable",
+					"search",
+					"starred",
+					"stock_to_build",
+					"tags",
+					"testable",
+					"trackable",
+					"unallocated_stock",
+					"variant_of",
+					"virtual"
+				],
+				"body": []
+			},
+			"post": {
+				"query": [],
+				"body": [
+					"IPN",
+					"active",
+					"assembly",
+					"category",
+					"component",
+					"consumable",
+					"copy_category_parameters",
+					"creation_user",
+					"default_expiry",
+					"default_location",
+					"description",
+					"duplicate",
+					"existing_image",
+					"image",
+					"initial_stock",
+					"initial_supplier",
+					"is_template",
+					"keywords",
+					"link",
+					"locked",
+					"maximum_stock",
+					"minimum_stock",
+					"name",
+					"notes",
+					"purchaseable",
+					"responsible",
+					"revision",
+					"revision_of",
+					"salable",
+					"tags",
+					"testable",
+					"trackable",
+					"units",
+					"variant_of",
+					"virtual"
+				]
+			},
+			"put": {
+				"query": [],
+				"body": [
+					"IPN",
+					"active",
+					"assembly",
+					"category",
+					"component",
+					"consumable",
+					"copy_category_parameters",
+					"creation_user",
+					"default_expiry",
+					"default_location",
+					"description",
+					"duplicate",
+					"existing_image",
+					"image",
+					"initial_stock",
+					"initial_supplier",
+					"is_template",
+					"keywords",
+					"link",
+					"locked",
+					"maximum_stock",
+					"minimum_stock",
+					"name",
+					"notes",
+					"purchaseable",
+					"responsible",
+					"revision",
+					"revision_of",
+					"salable",
+					"tags",
+					"testable",
+					"trackable",
+					"units",
+					"variant_of",
+					"virtual"
+				]
+			},
+			"patch": {
+				"query": [],
+				"body": [
+					"IPN",
+					"active",
+					"assembly",
+					"category",
+					"component",
+					"consumable",
+					"copy_category_parameters",
+					"creation_user",
+					"default_expiry",
+					"default_location",
+					"description",
+					"duplicate",
+					"existing_image",
+					"image",
+					"initial_stock",
+					"initial_supplier",
+					"is_template",
+					"keywords",
+					"link",
+					"locked",
+					"maximum_stock",
+					"minimum_stock",
+					"name",
+					"notes",
+					"purchaseable",
+					"responsible",
+					"revision",
+					"revision_of",
+					"salable",
+					"tags",
+					"testable",
+					"trackable",
+					"units",
+					"variant_of",
+					"virtual"
+				]
+			}
+		},
+		"/part/{id}/": {
+			"get": {
+				"query": [
+					"category_detail",
+					"location_detail",
+					"parameters",
+					"path_detail",
+					"price_breaks",
+					"tags"
+				],
+				"body": []
+			},
+			"put": {
+				"query": [],
+				"body": [
+					"IPN",
+					"active",
+					"assembly",
+					"category",
+					"component",
+					"consumable",
+					"copy_category_parameters",
+					"creation_user",
+					"default_expiry",
+					"default_location",
+					"description",
+					"duplicate",
+					"existing_image",
+					"image",
+					"initial_stock",
+					"initial_supplier",
+					"is_template",
+					"keywords",
+					"link",
+					"locked",
+					"maximum_stock",
+					"minimum_stock",
+					"name",
+					"notes",
+					"purchaseable",
+					"responsible",
+					"revision",
+					"revision_of",
+					"salable",
+					"tags",
+					"testable",
+					"trackable",
+					"units",
+					"variant_of",
+					"virtual"
+				]
+			},
+			"patch": {
+				"query": [],
+				"body": [
+					"IPN",
+					"active",
+					"assembly",
+					"category",
+					"component",
+					"consumable",
+					"copy_category_parameters",
+					"creation_user",
+					"default_expiry",
+					"default_location",
+					"description",
+					"duplicate",
+					"existing_image",
+					"image",
+					"initial_stock",
+					"initial_supplier",
+					"is_template",
+					"keywords",
+					"link",
+					"locked",
+					"maximum_stock",
+					"minimum_stock",
+					"name",
+					"notes",
+					"purchaseable",
+					"responsible",
+					"revision",
+					"revision_of",
+					"salable",
+					"tags",
+					"testable",
+					"trackable",
+					"units",
+					"variant_of",
+					"virtual"
+				]
+			},
+			"delete": {
+				"query": [],
+				"body": []
+			}
+		},
+		"/part/{id}/bom-copy/": {
+			"post": {
+				"query": [],
+				"body": ["copy_substitutes", "include_inherited", "part", "remove_existing", "skip_invalid"]
+			}
+		},
+		"/part/{id}/bom-validate/": {
+			"get": {
+				"query": [],
+				"body": []
+			},
+			"put": {
+				"query": [],
+				"body": ["valid"]
+			},
+			"patch": {
+				"query": [],
+				"body": ["valid"]
+			}
+		},
+		"/part/{id}/pricing/": {
+			"get": {
+				"query": [],
+				"body": []
+			},
+			"put": {
+				"query": [],
+				"body": [
+					"override_max",
+					"override_max_currency",
+					"override_min",
+					"override_min_currency",
+					"update"
+				]
+			},
+			"patch": {
+				"query": [],
+				"body": [
+					"override_max",
+					"override_max_currency",
+					"override_min",
+					"override_min_currency",
+					"update"
+				]
+			}
+		},
+		"/part/{id}/requirements/": {
+			"get": {
+				"query": [],
+				"body": []
+			}
+		},
+		"/part/{id}/serial-numbers/": {
+			"get": {
+				"query": [],
+				"body": []
+			}
+		},
+		"/part/category/": {
+			"get": {
+				"query": [
+					"cascade",
+					"depth",
+					"exclude_tree",
+					"limit",
+					"name",
+					"offset",
+					"ordering",
+					"parent",
+					"path_detail",
+					"search",
+					"starred",
+					"structural",
+					"top_level"
+				],
+				"body": []
+			},
+			"post": {
+				"query": [],
+				"body": [
+					"default_keywords",
+					"default_location",
+					"description",
+					"icon",
+					"name",
+					"parent",
+					"structural"
+				]
+			},
+			"put": {
+				"query": [],
+				"body": [
+					"default_keywords",
+					"default_location",
+					"description",
+					"icon",
+					"name",
+					"parent",
+					"structural"
+				]
+			},
+			"patch": {
+				"query": [],
+				"body": [
+					"default_keywords",
+					"default_location",
+					"description",
+					"icon",
+					"name",
+					"parent",
+					"structural"
+				]
+			}
+		},
+		"/part/category/{id}/": {
+			"get": {
+				"query": ["path_detail"],
+				"body": []
+			},
+			"put": {
+				"query": [],
+				"body": [
+					"default_keywords",
+					"default_location",
+					"description",
+					"icon",
+					"name",
+					"parent",
+					"structural"
+				]
+			},
+			"patch": {
+				"query": [],
+				"body": [
+					"default_keywords",
+					"default_location",
+					"description",
+					"icon",
+					"name",
+					"parent",
+					"structural"
+				]
+			},
+			"delete": {
+				"query": [],
+				"body": []
+			}
+		},
+		"/part/category/parameters/": {
+			"get": {
+				"query": ["limit", "offset"],
+				"body": []
+			},
+			"post": {
+				"query": [],
+				"body": ["category", "default_value", "template"]
+			}
+		},
+		"/part/category/parameters/{id}/": {
+			"get": {
+				"query": [],
+				"body": []
+			},
+			"put": {
+				"query": [],
+				"body": ["category", "default_value", "template"]
+			},
+			"patch": {
+				"query": [],
+				"body": ["category", "default_value", "template"]
+			},
+			"delete": {
+				"query": [],
+				"body": []
+			}
+		},
+		"/part/category/tree/": {
+			"get": {
+				"query": [
+					"level",
+					"limit",
+					"max_level",
+					"offset",
+					"ordering",
+					"parent",
+					"search",
+					"tree_id"
+				],
+				"body": []
+			}
+		},
+		"/part/internal-price/": {
+			"get": {
+				"query": ["limit", "offset", "ordering", "part", "search"],
+				"body": []
+			},
+			"post": {
+				"query": [],
+				"body": ["part", "price", "price_currency", "quantity"]
+			}
+		},
+		"/part/internal-price/{id}/": {
+			"get": {
+				"query": [],
+				"body": []
+			},
+			"put": {
+				"query": [],
+				"body": ["part", "price", "price_currency", "quantity"]
+			},
+			"patch": {
+				"query": [],
+				"body": ["part", "price", "price_currency", "quantity"]
+			},
+			"delete": {
+				"query": [],
+				"body": []
+			}
+		},
+		"/part/related/": {
+			"get": {
+				"query": ["limit", "offset", "ordering", "part", "part_1", "part_2", "search"],
+				"body": []
+			},
+			"post": {
+				"query": [],
+				"body": ["note", "part_1", "part_2"]
+			}
+		},
+		"/part/related/{id}/": {
+			"get": {
+				"query": [],
+				"body": []
+			},
+			"put": {
+				"query": [],
+				"body": ["note", "part_1", "part_2"]
+			},
+			"patch": {
+				"query": [],
+				"body": ["note", "part_1", "part_2"]
+			},
+			"delete": {
+				"query": [],
+				"body": []
+			}
+		},
+		"/part/sale-price/": {
+			"get": {
+				"query": ["limit", "offset", "ordering", "part", "search"],
+				"body": []
+			},
+			"post": {
+				"query": [],
+				"body": ["part", "price", "price_currency", "quantity"]
+			}
+		},
+		"/part/sale-price/{id}/": {
+			"get": {
+				"query": [],
+				"body": []
+			},
+			"put": {
+				"query": [],
+				"body": ["part", "price", "price_currency", "quantity"]
+			},
+			"patch": {
+				"query": [],
+				"body": ["part", "price", "price_currency", "quantity"]
+			},
+			"delete": {
+				"query": [],
+				"body": []
+			}
+		},
+		"/part/stocktake/": {
+			"get": {
+				"query": ["limit", "offset", "ordering", "part"],
+				"body": []
+			},
+			"post": {
+				"query": [],
+				"body": [
+					"cost_max",
+					"cost_max_currency",
+					"cost_min",
+					"cost_min_currency",
+					"item_count",
+					"part",
+					"quantity"
+				]
+			},
+			"delete": {
+				"query": [],
+				"body": ["filters", "items"],
+				"bodyItems": []
+			}
+		},
+		"/part/stocktake/{id}/": {
+			"get": {
+				"query": [],
+				"body": []
+			},
+			"put": {
+				"query": [],
+				"body": [
+					"cost_max",
+					"cost_max_currency",
+					"cost_min",
+					"cost_min_currency",
+					"item_count",
+					"part",
+					"quantity"
+				]
+			},
+			"patch": {
+				"query": [],
+				"body": [
+					"cost_max",
+					"cost_max_currency",
+					"cost_min",
+					"cost_min_currency",
+					"item_count",
+					"part",
+					"quantity"
+				]
+			},
+			"delete": {
+				"query": [],
+				"body": []
+			}
+		},
+		"/part/stocktake/generate/": {
+			"post": {
+				"query": [],
+				"body": ["category", "generate_entry", "generate_report", "location", "part"]
+			}
+		},
+		"/part/test-template/": {
+			"get": {
+				"query": [
+					"enabled",
+					"has_results",
+					"key",
+					"limit",
+					"offset",
+					"ordering",
+					"part",
+					"required",
+					"requires_attachment",
+					"requires_value",
+					"search"
+				],
+				"body": []
+			},
+			"post": {
+				"query": [],
+				"body": [
+					"choices",
+					"description",
+					"enabled",
+					"part",
+					"required",
+					"requires_attachment",
+					"requires_value",
+					"test_name"
+				]
+			}
+		},
+		"/part/test-template/{id}/": {
+			"get": {
+				"query": [],
+				"body": []
+			},
+			"put": {
+				"query": [],
+				"body": [
+					"choices",
+					"description",
+					"enabled",
+					"part",
+					"required",
+					"requires_attachment",
+					"requires_value",
+					"test_name"
+				]
+			},
+			"patch": {
+				"query": [],
+				"body": [
+					"choices",
+					"description",
+					"enabled",
+					"part",
+					"required",
+					"requires_attachment",
+					"requires_value",
+					"test_name"
+				]
+			},
+			"delete": {
+				"query": [],
+				"body": []
+			}
+		},
+		"/part/thumbs/": {
+			"get": {
+				"query": ["limit", "offset", "search"],
+				"body": []
+			}
+		},
+		"/part/thumbs/{id}/": {
+			"get": {
+				"query": [],
+				"body": []
+			},
+			"put": {
+				"query": [],
+				"body": ["image"]
+			},
+			"patch": {
+				"query": [],
+				"body": ["image"]
+			}
+		},
+		"/stock/": {
+			"get": {
+				"query": [
+					"IPN",
+					"IPN_contains",
+					"IPN_regex",
+					"active",
+					"allocated",
+					"assembly",
+					"available",
+					"batch",
+					"batch_regex",
+					"belongs_to",
+					"bom_item",
+					"build",
+					"cascade",
+					"category",
+					"company",
+					"consumed",
+					"consumed_by",
+					"created_after",
+					"created_before",
+					"customer",
+					"depleted",
+					"expired",
+					"expiry_after",
+					"expiry_before",
+					"external",
+					"has_batch",
+					"has_child_items",
+					"has_installed_items",
+					"has_purchase_price",
+					"has_stocktake",
+					"in_stock",
+					"include_variants",
+					"installed",
+					"is_building",
+					"limit",
+					"location",
+					"location_detail",
+					"manufacturer",
+					"manufacturer_part",
+					"max_stock",
+					"min_stock",
+					"name",
+					"name_contains",
+					"name_regex",
+					"offset",
+					"ordering",
+					"parent",
+					"part",
+					"part_detail",
+					"part_tree",
+					"path_detail",
+					"purchase_order",
+					"salable",
+					"sales_order",
+					"search",
+					"sent_to_customer",
+					"serial",
+					"serial_gte",
+					"serial_lte",
+					"serialized",
+					"stale",
+					"status",
+					"stocktake_after",
+					"stocktake_before",
+					"supplier",
+					"supplier_part",
+					"supplier_part_detail",
+					"tags",
+					"tags__name",
+					"tags__slug",
+					"tests",
+					"tracked",
+					"updated_after",
+					"updated_before"
+				],
+				"body": []
+			},
+			"post": {
+				"query": [],
+				"body": [
+					"batch",
+					"belongs_to",
+					"build",
+					"consumed_by",
+					"customer",
+					"delete_on_deplete",
+					"expiry_date",
+					"is_building",
+					"link",
+					"location",
+					"notes",
+					"owner",
+					"packaging",
+					"part",
+					"purchase_order",
+					"purchase_price",
+					"purchase_price_currency",
+					"quantity",
+					"sales_order",
+					"serial",
+					"serial_numbers",
+					"status",
+					"status_custom_key",
+					"supplier_part",
+					"tags",
+					"use_pack_size"
+				]
+			},
+			"put": {
+				"query": [],
+				"body": [
+					"batch",
+					"belongs_to",
+					"build",
+					"consumed_by",
+					"customer",
+					"delete_on_deplete",
+					"expiry_date",
+					"is_building",
+					"link",
+					"location",
+					"notes",
+					"owner",
+					"packaging",
+					"part",
+					"purchase_order",
+					"purchase_price",
+					"purchase_price_currency",
+					"quantity",
+					"sales_order",
+					"serial",
+					"serial_numbers",
+					"status",
+					"status_custom_key",
+					"supplier_part",
+					"tags",
+					"use_pack_size"
+				]
+			},
+			"patch": {
+				"query": [],
+				"body": [
+					"batch",
+					"belongs_to",
+					"build",
+					"consumed_by",
+					"customer",
+					"delete_on_deplete",
+					"expiry_date",
+					"is_building",
+					"link",
+					"location",
+					"notes",
+					"owner",
+					"packaging",
+					"part",
+					"purchase_order",
+					"purchase_price",
+					"purchase_price_currency",
+					"quantity",
+					"sales_order",
+					"serial",
+					"serial_numbers",
+					"status",
+					"status_custom_key",
+					"supplier_part",
+					"tags",
+					"use_pack_size"
+				]
+			},
+			"delete": {
+				"query": [],
+				"body": ["filters", "items"],
+				"bodyItems": []
+			}
+		},
+		"/stock/{id}/": {
+			"get": {
+				"query": ["location_detail", "part_detail", "path_detail", "supplier_part_detail", "tests"],
+				"body": []
+			},
+			"put": {
+				"query": [],
+				"body": [
+					"batch",
+					"belongs_to",
+					"build",
+					"consumed_by",
+					"customer",
+					"delete_on_deplete",
+					"expiry_date",
+					"is_building",
+					"link",
+					"location",
+					"notes",
+					"owner",
+					"packaging",
+					"part",
+					"purchase_order",
+					"purchase_price",
+					"purchase_price_currency",
+					"quantity",
+					"sales_order",
+					"serial",
+					"serial_numbers",
+					"status",
+					"status_custom_key",
+					"supplier_part",
+					"tags",
+					"use_pack_size"
+				]
+			},
+			"patch": {
+				"query": [],
+				"body": [
+					"batch",
+					"belongs_to",
+					"build",
+					"consumed_by",
+					"customer",
+					"delete_on_deplete",
+					"expiry_date",
+					"is_building",
+					"link",
+					"location",
+					"notes",
+					"owner",
+					"packaging",
+					"part",
+					"purchase_order",
+					"purchase_price",
+					"purchase_price_currency",
+					"quantity",
+					"sales_order",
+					"serial",
+					"serial_numbers",
+					"status",
+					"status_custom_key",
+					"supplier_part",
+					"tags",
+					"use_pack_size"
+				]
+			},
+			"delete": {
+				"query": [],
+				"body": []
+			}
+		},
+		"/stock/{id}/convert/": {
+			"post": {
+				"query": [],
+				"body": ["part"]
+			}
+		},
+		"/stock/{id}/disassemble/": {
+			"post": {
+				"query": [],
+				"body": ["items", "location", "notes", "quantity"],
+				"bodyItems": [
+					"bom_item",
+					"location",
+					"purchase_price",
+					"purchase_price_currency",
+					"quantity",
+					"status"
+				]
+			}
+		},
+		"/stock/{id}/install/": {
+			"post": {
+				"query": [],
+				"body": ["note", "quantity", "stock_item"]
+			}
+		},
+		"/stock/{id}/serial-numbers/": {
+			"get": {
+				"query": [],
+				"body": []
+			}
+		},
+		"/stock/{id}/serialize/": {
+			"post": {
+				"query": [],
+				"body": ["destination", "notes", "quantity", "serial_numbers"]
+			}
+		},
+		"/stock/{id}/uninstall/": {
+			"post": {
+				"query": [],
+				"body": ["location", "note"]
+			}
+		},
+		"/stock/add/": {
+			"post": {
+				"query": [],
+				"body": ["items", "notes"],
+				"bodyItems": ["batch", "merge", "packaging", "pk", "quantity", "status"]
+			}
+		},
+		"/stock/assign/": {
+			"post": {
+				"query": [],
+				"body": ["customer", "items", "notes"],
+				"bodyItems": ["item"]
+			}
+		},
+		"/stock/change_status/": {
+			"post": {
+				"query": [],
+				"body": ["items", "note", "status"],
+				"bodyItems": []
+			}
+		},
+		"/stock/count/": {
+			"post": {
+				"query": [],
+				"body": ["items", "location", "notes"],
+				"bodyItems": ["batch", "merge", "packaging", "pk", "quantity", "status"]
+			}
+		},
+		"/stock/location/": {
+			"get": {
+				"query": [
+					"cascade",
+					"depth",
+					"external",
+					"has_location_type",
+					"limit",
+					"location_type",
+					"name",
+					"offset",
+					"ordering",
+					"parent",
+					"path_detail",
+					"search",
+					"structural",
+					"tags",
+					"top_level"
+				],
+				"body": []
+			},
+			"post": {
+				"query": [],
+				"body": [
+					"custom_icon",
+					"description",
+					"external",
+					"location_type",
+					"name",
+					"owner",
+					"parent",
+					"structural",
+					"tags"
+				]
+			},
+			"put": {
+				"query": [],
+				"body": [
+					"custom_icon",
+					"description",
+					"external",
+					"location_type",
+					"name",
+					"owner",
+					"parent",
+					"structural",
+					"tags"
+				]
+			},
+			"patch": {
+				"query": [],
+				"body": [
+					"custom_icon",
+					"description",
+					"external",
+					"location_type",
+					"name",
+					"owner",
+					"parent",
+					"structural",
+					"tags"
+				]
+			}
+		},
+		"/stock/location-type/": {
+			"get": {
+				"query": ["limit", "offset", "ordering", "search"],
+				"body": []
+			},
+			"post": {
+				"query": [],
+				"body": ["description", "icon", "name"]
+			}
+		},
+		"/stock/location-type/{id}/": {
+			"get": {
+				"query": [],
+				"body": []
+			},
+			"put": {
+				"query": [],
+				"body": ["description", "icon", "name"]
+			},
+			"patch": {
+				"query": [],
+				"body": ["description", "icon", "name"]
+			},
+			"delete": {
+				"query": [],
+				"body": []
+			}
+		},
+		"/stock/location/{id}/": {
+			"get": {
+				"query": ["path_detail"],
+				"body": []
+			},
+			"put": {
+				"query": [],
+				"body": [
+					"custom_icon",
+					"description",
+					"external",
+					"location_type",
+					"name",
+					"owner",
+					"parent",
+					"structural",
+					"tags"
+				]
+			},
+			"patch": {
+				"query": [],
+				"body": [
+					"custom_icon",
+					"description",
+					"external",
+					"location_type",
+					"name",
+					"owner",
+					"parent",
+					"structural",
+					"tags"
+				]
+			},
+			"delete": {
+				"query": [],
+				"body": []
+			}
+		},
+		"/stock/location/tree/": {
+			"get": {
+				"query": [
+					"level",
+					"limit",
+					"max_level",
+					"offset",
+					"ordering",
+					"parent",
+					"search",
+					"tree_id"
+				],
+				"body": []
+			}
+		},
+		"/stock/merge/": {
+			"post": {
+				"query": [],
+				"body": [
+					"allow_mismatched_status",
+					"allow_mismatched_suppliers",
+					"items",
+					"location",
+					"notes"
+				],
+				"bodyItems": ["item"]
+			}
+		},
+		"/stock/remove/": {
+			"post": {
+				"query": [],
+				"body": ["items", "notes"],
+				"bodyItems": ["batch", "merge", "packaging", "pk", "quantity", "status"]
+			}
+		},
+		"/stock/return/": {
+			"post": {
+				"query": [],
+				"body": ["items", "location", "merge", "notes"],
+				"bodyItems": ["batch", "merge", "packaging", "pk", "quantity", "status"]
+			}
+		},
+		"/stock/status/": {
+			"get": {
+				"query": [],
+				"body": []
+			}
+		},
+		"/stock/test/": {
+			"get": {
+				"query": [
+					"build",
+					"enabled",
+					"include_installed",
+					"limit",
+					"offset",
+					"ordering",
+					"part",
+					"required",
+					"result",
+					"search",
+					"stock_item",
+					"template",
+					"template_detail",
+					"test",
+					"user",
+					"user_detail",
+					"value"
+				],
+				"body": []
+			},
+			"post": {
+				"query": [],
+				"body": [
+					"attachment",
+					"finished_datetime",
+					"notes",
+					"result",
+					"started_datetime",
+					"stock_item",
+					"template",
+					"test_station",
+					"value"
+				]
+			},
+			"delete": {
+				"query": [],
+				"body": ["filters", "items"],
+				"bodyItems": []
+			}
+		},
+		"/stock/test/{id}/": {
+			"get": {
+				"query": ["template_detail", "user_detail"],
+				"body": []
+			},
+			"put": {
+				"query": [],
+				"body": [
+					"attachment",
+					"finished_datetime",
+					"notes",
+					"result",
+					"started_datetime",
+					"stock_item",
+					"template",
+					"test_station",
+					"value"
+				]
+			},
+			"patch": {
+				"query": [],
+				"body": [
+					"attachment",
+					"finished_datetime",
+					"notes",
+					"result",
+					"started_datetime",
+					"stock_item",
+					"template",
+					"test_station",
+					"value"
+				]
+			},
+			"delete": {
+				"query": [],
+				"body": []
+			}
+		},
+		"/stock/track/": {
+			"get": {
+				"query": [
+					"include_variants",
+					"item",
+					"item_detail",
+					"limit",
+					"max_date",
+					"min_date",
+					"offset",
+					"ordering",
+					"part",
+					"search",
+					"user",
+					"user_detail"
+				],
+				"body": []
+			}
+		},
+		"/stock/track/{id}/": {
+			"get": {
+				"query": [],
+				"body": []
+			}
+		},
+		"/stock/track/status/": {
+			"get": {
+				"query": [],
+				"body": []
+			}
+		},
+		"/stock/transfer/": {
+			"post": {
+				"query": [],
+				"body": ["items", "location", "notes"],
+				"bodyItems": ["batch", "merge", "packaging", "pk", "quantity", "status"]
+			}
+		},
+		"/user/me/": {
+			"get": {
+				"query": ["roles"],
+				"body": []
+			},
+			"put": {
+				"query": [],
+				"body": ["email", "first_name", "last_name", "username"]
+			},
+			"patch": {
+				"query": [],
+				"body": ["email", "first_name", "last_name", "username"]
+			},
+			"delete": {
+				"query": [],
+				"body": []
+			}
+		},
+		"/user/me/profile/": {
+			"get": {
+				"query": [],
+				"body": []
+			},
+			"put": {
+				"query": [],
+				"body": [
+					"active",
+					"contact",
+					"displayname",
+					"language",
+					"location",
+					"organisation",
+					"position",
+					"primary_group",
+					"status",
+					"theme",
+					"type",
+					"widgets"
+				]
+			},
+			"patch": {
+				"query": [],
+				"body": [
+					"active",
+					"contact",
+					"displayname",
+					"language",
+					"location",
+					"organisation",
+					"position",
+					"primary_group",
+					"status",
+					"theme",
+					"type",
+					"widgets"
+				]
+			}
+		},
+		"/user/me/roles/": {
+			"get": {
+				"query": [],
+				"body": []
+			}
+		},
+		"/user/me/token/": {
+			"get": {
+				"query": ["name"],
+				"body": []
+			}
+		}
+	}
+}

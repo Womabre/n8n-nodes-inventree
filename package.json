@@ -1,6 +1,6 @@
 {
 	"name": "n8n-nodes-inventree",
-	"version": "0.1.0",
+	"version": "0.1.1",
 	"publisher": "Womabre",
 	"description": "n8n community node for the InvenTree open-source inventory, parts and BOM management API",
 	"license": "MIT",

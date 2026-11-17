@@ -6,6 +6,18 @@ All notable changes to this project are documented in this file. The format is b
 
 ## [Unreleased]
 
+## [0.1.1] - 2026-11-17
+
+Not yet published to npm. Found by the first end-to-end run against a live InvenTree 1.5.7 server on n8n 2.0.3.
+
+### Fixed
+
+- An expression in an Additional Fields, Update Fields, Filters, Options or Line Fields entry was sent as its literal `={{ ... }}` text, so InvenTree answered 400 (e.g. a Part ID filter taken from a previous node). Every collection field now carries its own routing, which n8n resolves before sending. A test fails if any operation reads a collection field through `$parameter` again.
+
+### Changed
+
+- Errors from InvenTree now show its own reason instead of "Bad request - please check your parameters", e.g. `InvenTree: reference: Reference must match required pattern: PO-{ref:04d}` or `InvenTree: Cannot delete this part as it is still active`. Nested errors name the line, e.g. `items[0].pk: ...`.
+
 ## [0.1.0] - 2026-10-11
 
 First version. Not yet published to npm.

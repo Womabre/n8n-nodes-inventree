@@ -7,31 +7,28 @@ import {
 } from '../parameters/shared-parameters';
 import { stockStatusOptions } from '../parameters/status-codes';
 import {
-	clearableExpr,
-	dateExpr,
+	FieldRoute,
 	optionalExpr,
+	routeOptions,
 	stockAdjustmentItemsExpr,
-	tagListExpr,
 } from '../utils/expressions';
 
 const show = (operation: string[]) => ({ resource: ['stockItem'], operation });
 
 const ADJUSTMENTS = ['addStock', 'removeStock', 'countStock', 'transfer'];
 
-/** Writable stock item fields shared by Create (Additional Fields) and Update (Update Fields). */
-function stockFields(collection: string) {
-	return {
-		batch: clearableExpr(`${collection}.batch`),
-		packaging: clearableExpr(`${collection}.packaging`),
-		status: optionalExpr(`${collection}.status`),
-		expiry_date: dateExpr(`${collection}.expiryDate`),
-		purchase_price: clearableExpr(`${collection}.purchasePrice`),
-		link: optionalExpr(`${collection}.link`),
-		notes: optionalExpr(`${collection}.notes`),
-		delete_on_deplete: optionalExpr(`${collection}.deleteOnDeplete`),
-		tags: tagListExpr(`${collection}.tags`),
-	};
-}
+/** API property for each writable stock item field shared by Create and Update. */
+const STOCK_FIELD_ROUTES: Record<string, FieldRoute> = {
+	batch: ['batch', 'clearable'],
+	deleteOnDeplete: 'delete_on_deplete',
+	expiryDate: ['expiry_date', 'date'],
+	link: 'link',
+	notes: 'notes',
+	packaging: ['packaging', 'clearable'],
+	purchasePrice: ['purchase_price', 'clearable'],
+	status: 'status',
+	tags: ['tags', 'tags'],
+};
 
 const stockFieldOptions: INodeProperties[] = [
 	{ displayName: 'Batch', name: 'batch', type: 'string', default: '', description: 'Batch code' },
@@ -107,7 +104,6 @@ export const operations: INodeProperties[] = [
 						url: '/stock/add/',
 						body: {
 							items: stockAdjustmentItemsExpr,
-							notes: optionalExpr('options.notes'),
 						},
 					},
 				},
@@ -123,8 +119,6 @@ export const operations: INodeProperties[] = [
 						url: '/stock/count/',
 						body: {
 							items: stockAdjustmentItemsExpr,
-							notes: optionalExpr('options.notes'),
-							location: optionalExpr('options.location'),
 						},
 					},
 				},
@@ -143,8 +137,6 @@ export const operations: INodeProperties[] = [
 							part: '={{$parameter["partId"]}}',
 							quantity: '={{$parameter["quantity"]}}',
 							location: optionalExpr('location'),
-							serial_numbers: optionalExpr('additionalFields.serialNumbers'),
-							...stockFields('additionalFields'),
 						},
 					},
 				},
@@ -168,10 +160,6 @@ export const operations: INodeProperties[] = [
 					request: {
 						method: 'GET',
 						url: '=/stock/{{$parameter["stockItemId"]}}/',
-						qs: {
-							part_detail: optionalExpr('options.partDetail'),
-							location_detail: optionalExpr('options.locationDetail'),
-						},
 					},
 				},
 			},
@@ -183,20 +171,6 @@ export const operations: INodeProperties[] = [
 					request: {
 						method: 'GET',
 						url: '/stock/',
-						qs: {
-							search: optionalExpr('filters.search'),
-							part: optionalExpr('filters.part'),
-							include_variants: optionalExpr('filters.includeVariants'),
-							location: optionalExpr('filters.location'),
-							cascade: optionalExpr('filters.cascade'),
-							batch: optionalExpr('filters.batch'),
-							serial: optionalExpr('filters.serial'),
-							status: optionalExpr('filters.status'),
-							in_stock: optionalExpr('filters.inStock'),
-							available: optionalExpr('filters.available'),
-							part_detail: optionalExpr('options.partDetail'),
-							location_detail: optionalExpr('options.locationDetail'),
-						},
 					},
 					...listRouting,
 				},
@@ -212,7 +186,6 @@ export const operations: INodeProperties[] = [
 						url: '/stock/remove/',
 						body: {
 							items: stockAdjustmentItemsExpr,
-							notes: optionalExpr('options.notes'),
 						},
 					},
 				},
@@ -229,7 +202,6 @@ export const operations: INodeProperties[] = [
 						body: {
 							items: stockAdjustmentItemsExpr,
 							location: '={{$parameter["destination"]}}',
-							notes: optionalExpr('options.notes'),
 						},
 					},
 				},
@@ -244,10 +216,6 @@ export const operations: INodeProperties[] = [
 					request: {
 						method: 'PATCH',
 						url: '=/stock/{{$parameter["stockItemId"]}}/',
-						body: {
-							serial: clearableExpr('updateFields.serial'),
-							...stockFields('updateFields'),
-						},
 					},
 				},
 			},
@@ -284,17 +252,21 @@ export const operations: INodeProperties[] = [
 		placeholder: 'Add Field',
 		default: {},
 		displayOptions: { show: show(['create']) },
-		options: [
-			{
-				displayName: 'Serial Numbers',
-				name: 'serialNumbers',
-				type: 'string',
-				default: '',
-				description:
-					'Serial numbers for the new items, e.g. 1-5 or 10, 11, 12. Creates one stock item per serial number.',
-			},
-			...stockFieldOptions,
-		],
+		options: routeOptions(
+			'body',
+			[
+				{
+					displayName: 'Serial Numbers',
+					name: 'serialNumbers',
+					type: 'string',
+					default: '',
+					description:
+						'Serial numbers for the new items, e.g. 1-5 or 10, 11, 12. Creates one stock item per serial number.',
+				},
+				...stockFieldOptions,
+			],
+			{ ...STOCK_FIELD_ROUTES, serialNumbers: 'serial_numbers' },
+		),
 	},
 
 	// Get, Update, Delete, adjustments
@@ -334,10 +306,14 @@ export const operations: INodeProperties[] = [
 		placeholder: 'Add Field',
 		default: {},
 		displayOptions: { show: show(['update']) },
-		options: [
-			{ displayName: 'Serial Number', name: 'serial', type: 'string', default: '' },
-			...stockFieldOptions,
-		],
+		options: routeOptions(
+			'body',
+			[
+				{ displayName: 'Serial Number', name: 'serial', type: 'string', default: '' },
+				...stockFieldOptions,
+			],
+			{ ...STOCK_FIELD_ROUTES, serial: ['serial', 'clearable'] },
+		),
 	},
 
 	// Get Many
@@ -349,60 +325,75 @@ export const operations: INodeProperties[] = [
 		placeholder: 'Add Filter',
 		default: {},
 		displayOptions: { show: show(['getAll']) },
-		options: [
+		options: routeOptions(
+			'query',
+			[
+				{
+					displayName: 'Available',
+					name: 'available',
+					type: 'boolean',
+					default: true,
+					description: 'Whether to return only stock that is not allocated',
+				},
+				{
+					displayName: 'Batch',
+					name: 'batch',
+					type: 'string',
+					default: '',
+					description: 'Batch code (case-insensitive)',
+				},
+				{
+					displayName: 'In Stock',
+					name: 'inStock',
+					type: 'boolean',
+					default: true,
+					description: 'Whether to return only items that are in stock',
+				},
+				{
+					displayName: 'Include Sublocations',
+					name: 'cascade',
+					type: 'boolean',
+					default: true,
+					description: 'Whether a Location ID filter also matches stock in its child locations',
+				},
+				{
+					displayName: 'Include Variants',
+					name: 'includeVariants',
+					type: 'boolean',
+					default: true,
+					description: 'Whether a Part ID filter also matches stock of its variant parts',
+				},
+				{ displayName: 'Location ID', name: 'location', type: 'string', default: '' },
+				{ displayName: 'Part ID', name: 'part', type: 'string', default: '' },
+				{
+					displayName: 'Search',
+					name: 'search',
+					type: 'string',
+					default: '',
+					description: 'Free-text search',
+				},
+				{ displayName: 'Serial Number', name: 'serial', type: 'string', default: '' },
+				{
+					displayName: 'Status',
+					name: 'status',
+					type: 'options',
+					options: stockStatusOptions,
+					default: 10,
+				},
+			],
 			{
-				displayName: 'Available',
-				name: 'available',
-				type: 'boolean',
-				default: true,
-				description: 'Whether to return only stock that is not allocated',
+				available: 'available',
+				batch: 'batch',
+				cascade: 'cascade',
+				inStock: 'in_stock',
+				includeVariants: 'include_variants',
+				location: 'location',
+				part: 'part',
+				search: 'search',
+				serial: 'serial',
+				status: 'status',
 			},
-			{
-				displayName: 'Batch',
-				name: 'batch',
-				type: 'string',
-				default: '',
-				description: 'Batch code (case-insensitive)',
-			},
-			{
-				displayName: 'In Stock',
-				name: 'inStock',
-				type: 'boolean',
-				default: true,
-				description: 'Whether to return only items that are in stock',
-			},
-			{
-				displayName: 'Include Sublocations',
-				name: 'cascade',
-				type: 'boolean',
-				default: true,
-				description: 'Whether a Location ID filter also matches stock in its child locations',
-			},
-			{
-				displayName: 'Include Variants',
-				name: 'includeVariants',
-				type: 'boolean',
-				default: true,
-				description: 'Whether a Part ID filter also matches stock of its variant parts',
-			},
-			{ displayName: 'Location ID', name: 'location', type: 'string', default: '' },
-			{ displayName: 'Part ID', name: 'part', type: 'string', default: '' },
-			{
-				displayName: 'Search',
-				name: 'search',
-				type: 'string',
-				default: '',
-				description: 'Free-text search',
-			},
-			{ displayName: 'Serial Number', name: 'serial', type: 'string', default: '' },
-			{
-				displayName: 'Status',
-				name: 'status',
-				type: 'options',
-				options: stockStatusOptions,
-				default: 10,
-			},
-		],
+		),
 	},
 
 	// Options
@@ -413,22 +404,26 @@ export const operations: INodeProperties[] = [
 		placeholder: 'Add Option',
 		default: {},
 		displayOptions: { show: show(['get', 'getAll']) },
-		options: [
-			{
-				displayName: 'Include Location Details',
-				name: 'locationDetail',
-				type: 'boolean',
-				default: true,
-				description: 'Whether to include the full location object in each stock item',
-			},
-			{
-				displayName: 'Include Part Details',
-				name: 'partDetail',
-				type: 'boolean',
-				default: true,
-				description: 'Whether to include the full part object in each stock item',
-			},
-		],
+		options: routeOptions(
+			'query',
+			[
+				{
+					displayName: 'Include Location Details',
+					name: 'locationDetail',
+					type: 'boolean',
+					default: true,
+					description: 'Whether to include the full location object in each stock item',
+				},
+				{
+					displayName: 'Include Part Details',
+					name: 'partDetail',
+					type: 'boolean',
+					default: true,
+					description: 'Whether to include the full part object in each stock item',
+				},
+			],
+			{ locationDetail: 'location_detail', partDetail: 'part_detail' },
+		),
 	},
 	{
 		displayName: 'Options',
@@ -437,22 +432,26 @@ export const operations: INodeProperties[] = [
 		placeholder: 'Add Option',
 		default: {},
 		displayOptions: { show: show(ADJUSTMENTS) },
-		options: [
-			{
-				displayName: 'Location ID',
-				name: 'location',
-				type: 'string',
-				default: '',
-				displayOptions: { show: { '/operation': ['countStock'] } },
-				description: 'Also set the location of the counted item',
-			},
-			{
-				displayName: 'Notes',
-				name: 'notes',
-				type: 'string',
-				default: '',
-				description: 'Note recorded in the stock history',
-			},
-		],
+		options: routeOptions(
+			'body',
+			[
+				{
+					displayName: 'Location ID',
+					name: 'location',
+					type: 'string',
+					default: '',
+					displayOptions: { show: { '/operation': ['countStock'] } },
+					description: 'Also set the location of the counted item',
+				},
+				{
+					displayName: 'Notes',
+					name: 'notes',
+					type: 'string',
+					default: '',
+					description: 'Note recorded in the stock history',
+				},
+			],
+			{ location: 'location', notes: 'notes' },
+		),
 	},
 ];

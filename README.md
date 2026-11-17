@@ -88,7 +88,8 @@ The node authenticates with an InvenTree API token.
 ## Compatibility
 
 - **Node.js:** `>=20.15`
-- **InvenTree:** checked against the OpenAPI schema of InvenTree 1.5.7 (API version 530). Older servers have not been tested.
+- **InvenTree:** checked against the OpenAPI schema of InvenTree 1.5.7 (API version 530), and every operation, dropdown and the credential test run end to end against a live InvenTree 1.5.7 server. Older servers have not been tested.
+- **n8n:** run end to end on n8n 2.0.3.
 
 ---
 
@@ -98,6 +99,7 @@ The node authenticates with an InvenTree API token.
 - **Parts can only be deleted when inactive.** InvenTree refuses to delete an active part, or a part used in another part's BOM. Update the part with **Active** off, then delete it.
 - **Purchase order references follow your server's pattern.** Create needs a reference that matches the purchase order reference pattern set in InvenTree (by default `PO-{ref:04d}`, e.g. `PO-0001`).
 - **Quantities change through stock actions.** Update does not change a stock item's quantity or location. Use Add Stock, Remove Stock, Count Stock or Transfer, so the change lands in the stock history.
+- **Errors show InvenTree's own reason.** When InvenTree refuses a request, the node error names the field and InvenTree's message, e.g. `InvenTree: reference: Reference must match required pattern: PO-{ref:04d}`.
 
 ---
 

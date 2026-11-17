@@ -13,6 +13,7 @@ import * as part from './operations/part';
 import * as stockItem from './operations/stockItem';
 import * as bomItem from './operations/bomItem';
 import * as purchaseOrder from './operations/purchaseOrder';
+import { withErrorHandling } from './utils/errors';
 
 export class InvenTree implements INodeType {
 	methods = {
@@ -53,8 +54,11 @@ export class InvenTree implements INodeType {
 				Accept: 'application/json',
 				'Content-Type': 'application/json',
 			},
+			// Error responses reach every operation's postReceive, where
+			// throwOnErrorStatus raises them with InvenTree's own message.
+			ignoreHttpStatusErrors: true,
 		},
-		properties: [
+		properties: withErrorHandling([
 			{
 				displayName: 'Resource',
 				name: 'resource',
@@ -72,6 +76,6 @@ export class InvenTree implements INodeType {
 			...stockItem.operations,
 			...bomItem.operations,
 			...purchaseOrder.operations,
-		],
+		]),
 	};
 }

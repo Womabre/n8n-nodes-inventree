@@ -1,7 +1,16 @@
 import type { INodeParameters } from 'n8n-workflow';
 import { describe, expect, it } from 'vitest';
 import { InvenTreeApi } from '../../../credentials/InvenTreeApi.credentials';
-import { allOperations, evaluate, node, resolveRequest, rl, sent } from './helpers/routing';
+import {
+	allOperations,
+	evaluate,
+	node,
+	resolveRequest,
+	rl,
+	routedOptions,
+	sent,
+} from './helpers/routing';
+import { throwOnErrorStatus } from '../utils/errors';
 
 describe('credential', () => {
 	const credential = new InvenTreeApi();
@@ -289,6 +298,7 @@ describe('list operations', () => {
 		]);
 		for (const { routing } of lists) {
 			expect(routing.output?.postReceive).toEqual([
+				throwOnErrorStatus,
 				{ type: 'rootProperty', properties: { property: 'results' } },
 			]);
 		}
@@ -299,6 +309,68 @@ describe('list operations', () => {
 		expect(limits).toHaveLength(4);
 		for (const limit of limits) {
 			expect(limit.routing?.send).toMatchObject({ type: 'query', property: 'limit' });
+		}
+	});
+});
+
+describe('expressions inside collection fields', () => {
+	// n8n's $parameter proxy does not resolve expressions inside a collection,
+	// so operation-level routing must never read a collection field. Found by
+	// the live E2E run against InvenTree 1.5.7: a Filters expression was sent
+	// as its literal `={{ ... }}` text and InvenTree answered 400.
+	it('no operation-level routing reads a collection field through $parameter', () => {
+		for (const { resource, operation, routing } of allOperations()) {
+			const text = JSON.stringify(routing.request);
+			expect(text, `${resource}.${operation}`).not.toMatch(/\$parameter\[\\"[^\\]+\\"\]\[/);
+		}
+	});
+
+	it('resolve an expression in a filter before sending it', () => {
+		const { qs } = resolveRequest({
+			resource: 'stockItem',
+			operation: 'getAll',
+			limit: 50,
+			filters: { part: '={{ 6 * 7 }}' },
+		});
+		expect(sent(qs)).toEqual({ part: 42 });
+	});
+
+	it('resolve an expression in an update field, tags and dates included', () => {
+		const { body } = resolveRequest({
+			resource: 'purchaseOrder',
+			operation: 'update',
+			purchaseOrderId: rl('5'),
+			updateFields: {
+				description: '={{ "PO for " + "job 7" }}',
+				tags: '={{ ["a", " b "] }}',
+				targetDate: '={{ "2026-12-01T00:00:00.000+01:00" }}',
+			},
+		});
+		expect(sent(body)).toEqual({
+			description: 'PO for job 7',
+			tags: ['a', 'b'],
+			target_date: '2026-12-01',
+		});
+	});
+
+	it('resolve an expression in a stock adjustment option', () => {
+		const { body } = resolveRequest({
+			resource: 'stockItem',
+			operation: 'countStock',
+			stockItemId: rl('7'),
+			quantity: 3,
+			options: { notes: '={{ "counted by " + "n8n" }}', location: '={{ 2 + 2 }}' },
+		});
+		expect(sent(body)).toEqual({
+			items: [{ pk: '7', quantity: 3 }],
+			notes: 'counted by n8n',
+			location: 4,
+		});
+	});
+
+	it('route every collection option of every operation', () => {
+		for (const { resource, operation } of allOperations()) {
+			expect(() => routedOptions(resource, operation)).not.toThrow();
 		}
 	});
 });

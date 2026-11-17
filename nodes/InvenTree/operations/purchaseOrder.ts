@@ -1,7 +1,7 @@
 import { INodeProperties } from 'n8n-workflow';
 import { listRouting, locatorField, returnAllAndLimit } from '../parameters/shared-parameters';
 import { purchaseOrderStatusOptions } from '../parameters/status-codes';
-import { clearableExpr, dateExpr, optionalExpr, tagListExpr } from '../utils/expressions';
+import { FieldRoute, routeOptions } from '../utils/expressions';
 
 const show = (operation: string[]) => ({ resource: ['purchaseOrder'], operation });
 
@@ -16,20 +16,18 @@ const ORDER_OPERATIONS = [
 	'getLineItems',
 ];
 
-/** Writable order fields shared by Create (Additional Fields) and Update (Update Fields). */
-function orderFields(collection: string) {
-	return {
-		description: optionalExpr(`${collection}.description`),
-		supplier_reference: optionalExpr(`${collection}.supplierReference`),
-		start_date: dateExpr(`${collection}.startDate`),
-		target_date: dateExpr(`${collection}.targetDate`),
-		destination: clearableExpr(`${collection}.destination`),
-		order_currency: clearableExpr(`${collection}.orderCurrency`),
-		link: optionalExpr(`${collection}.link`),
-		notes: optionalExpr(`${collection}.notes`),
-		tags: tagListExpr(`${collection}.tags`),
-	};
-}
+/** API property for each writable order field shared by Create and Update. */
+const ORDER_FIELD_ROUTES: Record<string, FieldRoute> = {
+	description: 'description',
+	destination: ['destination', 'clearable'],
+	link: 'link',
+	notes: 'notes',
+	orderCurrency: ['order_currency', 'clearable'],
+	startDate: ['start_date', 'date'],
+	supplierReference: 'supplier_reference',
+	tags: ['tags', 'tags'],
+	targetDate: ['target_date', 'date'],
+};
 
 const orderFieldOptions: INodeProperties[] = [
 	{ displayName: 'Description', name: 'description', type: 'string', default: '' },
@@ -107,14 +105,6 @@ export const operations: INodeProperties[] = [
 							order: '={{$parameter["purchaseOrderId"]}}',
 							part: '={{$parameter["supplierPartId"]}}',
 							quantity: '={{$parameter["quantity"]}}',
-							reference: optionalExpr('lineFields.reference'),
-							purchase_price: clearableExpr('lineFields.purchasePrice'),
-							purchase_price_currency: optionalExpr('lineFields.purchasePriceCurrency'),
-							auto_pricing: optionalExpr('lineFields.autoPricing'),
-							destination: clearableExpr('lineFields.destination'),
-							target_date: dateExpr('lineFields.targetDate'),
-							notes: optionalExpr('lineFields.notes'),
-							merge_items: optionalExpr('lineFields.mergeItems'),
 						},
 					},
 				},
@@ -156,7 +146,6 @@ export const operations: INodeProperties[] = [
 						body: {
 							supplier: '={{$parameter["supplier"]}}',
 							reference: '={{$parameter["reference"]}}',
-							...orderFields('additionalFields'),
 						},
 					},
 				},
@@ -180,9 +169,6 @@ export const operations: INodeProperties[] = [
 					request: {
 						method: 'GET',
 						url: '=/order/po/{{$parameter["purchaseOrderId"]}}/',
-						qs: {
-							supplier_detail: optionalExpr('options.supplierDetail'),
-						},
 					},
 				},
 			},
@@ -196,7 +182,6 @@ export const operations: INodeProperties[] = [
 						url: '/order/po-line/',
 						qs: {
 							order: '={{$parameter["purchaseOrderId"]}}',
-							part_detail: optionalExpr('options.partDetail'),
 						},
 					},
 					...listRouting,
@@ -210,16 +195,6 @@ export const operations: INodeProperties[] = [
 					request: {
 						method: 'GET',
 						url: '/order/po/',
-						qs: {
-							search: optionalExpr('filters.search'),
-							reference: optionalExpr('filters.reference'),
-							supplier: optionalExpr('filters.supplier'),
-							status: optionalExpr('filters.status'),
-							outstanding: optionalExpr('filters.outstanding'),
-							overdue: optionalExpr('filters.overdue'),
-							assigned_to_me: optionalExpr('filters.assignedToMe'),
-							supplier_detail: optionalExpr('options.supplierDetail'),
-						},
 					},
 					...listRouting,
 				},
@@ -244,10 +219,6 @@ export const operations: INodeProperties[] = [
 					request: {
 						method: 'PATCH',
 						url: '=/order/po/{{$parameter["purchaseOrderId"]}}/',
-						body: {
-							reference: optionalExpr('updateFields.reference'),
-							...orderFields('updateFields'),
-						},
 					},
 				},
 			},
@@ -281,7 +252,7 @@ export const operations: INodeProperties[] = [
 		placeholder: 'Add Field',
 		default: {},
 		displayOptions: { show: show(['create']) },
-		options: orderFieldOptions,
+		options: routeOptions('body', orderFieldOptions, ORDER_FIELD_ROUTES),
 	},
 
 	// Every operation on an existing order
@@ -301,10 +272,14 @@ export const operations: INodeProperties[] = [
 		placeholder: 'Add Field',
 		default: {},
 		displayOptions: { show: show(['update']) },
-		options: [
-			{ displayName: 'Reference', name: 'reference', type: 'string', default: '' },
-			...orderFieldOptions,
-		],
+		options: routeOptions(
+			'body',
+			[
+				{ displayName: 'Reference', name: 'reference', type: 'string', default: '' },
+				...orderFieldOptions,
+			],
+			{ ...ORDER_FIELD_ROUTES, reference: 'reference' },
+		),
 	},
 
 	// Complete
@@ -345,48 +320,63 @@ export const operations: INodeProperties[] = [
 		placeholder: 'Add Field',
 		default: {},
 		displayOptions: { show: show(['addLineItem']) },
-		options: [
+		options: routeOptions(
+			'body',
+			[
+				{
+					displayName: 'Auto Pricing',
+					name: 'autoPricing',
+					type: 'boolean',
+					default: false,
+					description:
+						'Whether to calculate the purchase price from the supplier part price breaks',
+				},
+				{
+					displayName: 'Destination Location ID',
+					name: 'destination',
+					type: 'string',
+					default: '',
+					description:
+						'Stock location for received items. Leave empty to use the order destination.',
+				},
+				{
+					displayName: 'Merge Items',
+					name: 'mergeItems',
+					type: 'boolean',
+					default: true,
+					description:
+						'Whether to merge into an existing line with the same part, destination and target date',
+				},
+				{ displayName: 'Notes', name: 'notes', type: 'string', default: '' },
+				{
+					displayName: 'Purchase Price',
+					name: 'purchasePrice',
+					type: 'string',
+					default: '',
+					description: 'Unit price as a decimal string such as 12.50',
+				},
+				{
+					displayName: 'Purchase Price Currency',
+					name: 'purchasePriceCurrency',
+					type: 'string',
+					default: '',
+					placeholder: 'e.g. EUR',
+					description: 'ISO 4217 currency code',
+				},
+				{ displayName: 'Reference', name: 'reference', type: 'string', default: '' },
+				{ displayName: 'Target Date', name: 'targetDate', type: 'dateTime', default: '' },
+			],
 			{
-				displayName: 'Auto Pricing',
-				name: 'autoPricing',
-				type: 'boolean',
-				default: false,
-				description: 'Whether to calculate the purchase price from the supplier part price breaks',
+				autoPricing: 'auto_pricing',
+				destination: ['destination', 'clearable'],
+				mergeItems: 'merge_items',
+				notes: 'notes',
+				purchasePrice: ['purchase_price', 'clearable'],
+				purchasePriceCurrency: 'purchase_price_currency',
+				reference: 'reference',
+				targetDate: ['target_date', 'date'],
 			},
-			{
-				displayName: 'Destination Location ID',
-				name: 'destination',
-				type: 'string',
-				default: '',
-				description: 'Stock location for received items. Leave empty to use the order destination.',
-			},
-			{
-				displayName: 'Merge Items',
-				name: 'mergeItems',
-				type: 'boolean',
-				default: true,
-				description:
-					'Whether to merge into an existing line with the same part, destination and target date',
-			},
-			{ displayName: 'Notes', name: 'notes', type: 'string', default: '' },
-			{
-				displayName: 'Purchase Price',
-				name: 'purchasePrice',
-				type: 'string',
-				default: '',
-				description: 'Unit price as a decimal string such as 12.50',
-			},
-			{
-				displayName: 'Purchase Price Currency',
-				name: 'purchasePriceCurrency',
-				type: 'string',
-				default: '',
-				placeholder: 'e.g. EUR',
-				description: 'ISO 4217 currency code',
-			},
-			{ displayName: 'Reference', name: 'reference', type: 'string', default: '' },
-			{ displayName: 'Target Date', name: 'targetDate', type: 'dateTime', default: '' },
-		],
+		),
 	},
 
 	// Get Many, Get Line Items
@@ -398,45 +388,57 @@ export const operations: INodeProperties[] = [
 		placeholder: 'Add Filter',
 		default: {},
 		displayOptions: { show: show(['getAll']) },
-		options: [
+		options: routeOptions(
+			'query',
+			[
+				{
+					displayName: 'Assigned to Me',
+					name: 'assignedToMe',
+					type: 'boolean',
+					default: true,
+					description: 'Whether to return only orders assigned to the API token user',
+				},
+				{
+					displayName: 'Outstanding',
+					name: 'outstanding',
+					type: 'boolean',
+					default: true,
+					description: 'Whether to return only open orders (pending, placed or on hold)',
+				},
+				{
+					displayName: 'Overdue',
+					name: 'overdue',
+					type: 'boolean',
+					default: true,
+					description: 'Whether to return only overdue orders',
+				},
+				{ displayName: 'Reference', name: 'reference', type: 'string', default: '' },
+				{
+					displayName: 'Search',
+					name: 'search',
+					type: 'string',
+					default: '',
+					description: 'Free-text search',
+				},
+				{
+					displayName: 'Status',
+					name: 'status',
+					type: 'options',
+					options: purchaseOrderStatusOptions,
+					default: 10,
+				},
+				{ displayName: 'Supplier ID', name: 'supplier', type: 'string', default: '' },
+			],
 			{
-				displayName: 'Assigned to Me',
-				name: 'assignedToMe',
-				type: 'boolean',
-				default: true,
-				description: 'Whether to return only orders assigned to the API token user',
+				assignedToMe: 'assigned_to_me',
+				outstanding: 'outstanding',
+				overdue: 'overdue',
+				reference: 'reference',
+				search: 'search',
+				status: 'status',
+				supplier: 'supplier',
 			},
-			{
-				displayName: 'Outstanding',
-				name: 'outstanding',
-				type: 'boolean',
-				default: true,
-				description: 'Whether to return only open orders (pending, placed or on hold)',
-			},
-			{
-				displayName: 'Overdue',
-				name: 'overdue',
-				type: 'boolean',
-				default: true,
-				description: 'Whether to return only overdue orders',
-			},
-			{ displayName: 'Reference', name: 'reference', type: 'string', default: '' },
-			{
-				displayName: 'Search',
-				name: 'search',
-				type: 'string',
-				default: '',
-				description: 'Free-text search',
-			},
-			{
-				displayName: 'Status',
-				name: 'status',
-				type: 'options',
-				options: purchaseOrderStatusOptions,
-				default: 10,
-			},
-			{ displayName: 'Supplier ID', name: 'supplier', type: 'string', default: '' },
-		],
+		),
 	},
 
 	// Options
@@ -447,15 +449,19 @@ export const operations: INodeProperties[] = [
 		placeholder: 'Add Option',
 		default: {},
 		displayOptions: { show: show(['get', 'getAll']) },
-		options: [
-			{
-				displayName: 'Include Supplier Details',
-				name: 'supplierDetail',
-				type: 'boolean',
-				default: true,
-				description: 'Whether to include the full supplier object in each order',
-			},
-		],
+		options: routeOptions(
+			'query',
+			[
+				{
+					displayName: 'Include Supplier Details',
+					name: 'supplierDetail',
+					type: 'boolean',
+					default: true,
+					description: 'Whether to include the full supplier object in each order',
+				},
+			],
+			{ supplierDetail: 'supplier_detail' },
+		),
 	},
 	{
 		displayName: 'Options',
@@ -464,14 +470,18 @@ export const operations: INodeProperties[] = [
 		placeholder: 'Add Option',
 		default: {},
 		displayOptions: { show: show(['getLineItems']) },
-		options: [
-			{
-				displayName: 'Include Part Details',
-				name: 'partDetail',
-				type: 'boolean',
-				default: true,
-				description: 'Whether to include the internal and supplier part objects in each line',
-			},
-		],
+		options: routeOptions(
+			'query',
+			[
+				{
+					displayName: 'Include Part Details',
+					name: 'partDetail',
+					type: 'boolean',
+					default: true,
+					description: 'Whether to include the internal and supplier part objects in each line',
+				},
+			],
+			{ partDetail: 'part_detail' },
+		),
 	},
 ];

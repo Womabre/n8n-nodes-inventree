@@ -1,7 +1,6 @@
-import type { INodeProperties } from 'n8n-workflow';
 import { describe, expect, it } from 'vitest';
 import schema from './fixtures/inventree-api.json';
-import { allOperations, evaluate, node, rl } from './helpers/routing';
+import { allOperations, evaluate, rl, routedOptions, topLevelQueryKeys } from './helpers/routing';
 
 /**
  * Schema conformance: every request the node can send must exist in
@@ -16,18 +15,6 @@ const paths = schema.paths as Record<string, Record<string, Endpoint>>;
 /** `=/part/{{$parameter["partId"]}}/` -> `/part/{id}/` */
 function template(url: string): string {
 	return url.replace(/^=/, '').replace(/\{\{[^}]*\}\}/g, '{id}');
-}
-
-/** Query parameters a property sends through `routing.send` (e.g. Limit -> `limit`). */
-function sendQueryKeys(resource: string, operation: string): string[] {
-	return node.description.properties
-		.filter((property: INodeProperties) => {
-			const show = property.displayOptions?.show;
-			return show?.resource?.includes(resource) && show?.operation?.includes(operation);
-		})
-		.map((property) => property.routing?.send)
-		.filter((send) => send?.type === 'query')
-		.map((send) => send?.property as string);
 }
 
 const operations = allOperations();
@@ -48,13 +35,19 @@ describe('schema conformance (InvenTree API ' + schema.apiVersion + ')', () => {
 
 			expect(url.endsWith('/'), `${url} must end with a slash`).toBe(true);
 
-			for (const key of Object.keys(routing.request.body ?? {})) {
+			const options = routedOptions(resource, operation);
+			const bodyKeys = [
+				...Object.keys(routing.request.body ?? {}),
+				...options.filter((o) => o.type === 'body').map((o) => o.property),
+			];
+			for (const key of bodyKeys) {
 				expect(endpoint.body, `body key ${key}`).toContain(key);
 			}
 
 			const queryKeys = [
 				...Object.keys(routing.request.qs ?? {}),
-				...sendQueryKeys(resource, operation),
+				...topLevelQueryKeys(resource, operation),
+				...options.filter((o) => o.type === 'query').map((o) => o.property),
 			];
 			if (routing.operations?.pagination) {
 				queryKeys.push('limit', 'offset');

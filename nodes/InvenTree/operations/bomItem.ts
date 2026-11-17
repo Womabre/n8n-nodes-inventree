@@ -1,22 +1,20 @@
 import { INodeProperties } from 'n8n-workflow';
 import { listRouting, locatorField, returnAllAndLimit } from '../parameters/shared-parameters';
-import { optionalExpr } from '../utils/expressions';
+import { FieldRoute, routeOptions } from '../utils/expressions';
 
 const show = (operation: string[]) => ({ resource: ['bomItem'], operation });
 
-/** Writable BOM item fields shared by Create (Additional Fields) and Update (Update Fields). */
-function bomFields(collection: string) {
-	return {
-		reference: optionalExpr(`${collection}.reference`),
-		note: optionalExpr(`${collection}.note`),
-		optional: optionalExpr(`${collection}.optional`),
-		consumable: optionalExpr(`${collection}.consumable`),
-		allow_variants: optionalExpr(`${collection}.allowVariants`),
-		inherited: optionalExpr(`${collection}.inherited`),
-		setup_quantity: optionalExpr(`${collection}.setupQuantity`),
-		attrition: optionalExpr(`${collection}.attrition`),
-	};
-}
+/** API property for each writable BOM item field shared by Create and Update. */
+const BOM_FIELD_ROUTES: Record<string, FieldRoute> = {
+	allowVariants: 'allow_variants',
+	attrition: 'attrition',
+	consumable: 'consumable',
+	inherited: 'inherited',
+	note: 'note',
+	optional: 'optional',
+	reference: 'reference',
+	setupQuantity: 'setup_quantity',
+};
 
 const bomFieldOptions: INodeProperties[] = [
 	{
@@ -94,7 +92,6 @@ export const operations: INodeProperties[] = [
 							part: '={{$parameter["assembly"]}}',
 							sub_part: '={{$parameter["component"]}}',
 							quantity: '={{$parameter["quantity"]}}',
-							...bomFields('additionalFields'),
 						},
 					},
 				},
@@ -118,10 +115,6 @@ export const operations: INodeProperties[] = [
 					request: {
 						method: 'GET',
 						url: '=/bom/{{$parameter["bomItemId"]}}/',
-						qs: {
-							part_detail: optionalExpr('options.partDetail'),
-							sub_part_detail: optionalExpr('options.subPartDetail'),
-						},
 					},
 				},
 			},
@@ -134,16 +127,6 @@ export const operations: INodeProperties[] = [
 					request: {
 						method: 'GET',
 						url: '/bom/',
-						qs: {
-							part: optionalExpr('filters.assembly'),
-							uses: optionalExpr('filters.uses'),
-							search: optionalExpr('filters.search'),
-							optional: optionalExpr('filters.optional'),
-							consumable: optionalExpr('filters.consumable'),
-							validated: optionalExpr('filters.validated'),
-							part_detail: optionalExpr('options.partDetail'),
-							sub_part_detail: optionalExpr('options.subPartDetail'),
-						},
 					},
 					...listRouting,
 				},
@@ -156,10 +139,6 @@ export const operations: INodeProperties[] = [
 					request: {
 						method: 'PATCH',
 						url: '=/bom/{{$parameter["bomItemId"]}}/',
-						body: {
-							quantity: optionalExpr('updateFields.quantity'),
-							...bomFields('updateFields'),
-						},
 					},
 				},
 			},
@@ -199,7 +178,7 @@ export const operations: INodeProperties[] = [
 		placeholder: 'Add Field',
 		default: {},
 		displayOptions: { show: show(['create']) },
-		options: bomFieldOptions,
+		options: routeOptions('body', bomFieldOptions, BOM_FIELD_ROUTES),
 	},
 
 	// Get, Update, Delete
@@ -221,16 +200,20 @@ export const operations: INodeProperties[] = [
 		placeholder: 'Add Field',
 		default: {},
 		displayOptions: { show: show(['update']) },
-		options: [
-			{
-				displayName: 'Quantity',
-				name: 'quantity',
-				type: 'number',
-				typeOptions: { minValue: 0 },
-				default: 1,
-			},
-			...bomFieldOptions,
-		],
+		options: routeOptions(
+			'body',
+			[
+				{
+					displayName: 'Quantity',
+					name: 'quantity',
+					type: 'number',
+					typeOptions: { minValue: 0 },
+					default: 1,
+				},
+				...bomFieldOptions,
+			],
+			{ ...BOM_FIELD_ROUTES, quantity: 'quantity' },
+		),
 	},
 
 	// Get Many
@@ -242,32 +225,43 @@ export const operations: INodeProperties[] = [
 		placeholder: 'Add Filter',
 		default: {},
 		displayOptions: { show: show(['getAll']) },
-		options: [
+		options: routeOptions(
+			'query',
+			[
+				{
+					displayName: 'Assembly Part ID',
+					name: 'assembly',
+					type: 'string',
+					default: '',
+					description: 'Return the BOM of this assembly',
+				},
+				{ displayName: 'Consumable', name: 'consumable', type: 'boolean', default: true },
+				{ displayName: 'Optional', name: 'optional', type: 'boolean', default: true },
+				{
+					displayName: 'Search',
+					name: 'search',
+					type: 'string',
+					default: '',
+					description: 'Free-text search',
+				},
+				{
+					displayName: 'Used In (Component Part ID)',
+					name: 'uses',
+					type: 'string',
+					default: '',
+					description: 'Return the BOM lines that use this component (where-used)',
+				},
+				{ displayName: 'Validated', name: 'validated', type: 'boolean', default: true },
+			],
 			{
-				displayName: 'Assembly Part ID',
-				name: 'assembly',
-				type: 'string',
-				default: '',
-				description: 'Return the BOM of this assembly',
+				assembly: 'part',
+				consumable: 'consumable',
+				optional: 'optional',
+				search: 'search',
+				uses: 'uses',
+				validated: 'validated',
 			},
-			{ displayName: 'Consumable', name: 'consumable', type: 'boolean', default: true },
-			{ displayName: 'Optional', name: 'optional', type: 'boolean', default: true },
-			{
-				displayName: 'Search',
-				name: 'search',
-				type: 'string',
-				default: '',
-				description: 'Free-text search',
-			},
-			{
-				displayName: 'Used In (Component Part ID)',
-				name: 'uses',
-				type: 'string',
-				default: '',
-				description: 'Return the BOM lines that use this component (where-used)',
-			},
-			{ displayName: 'Validated', name: 'validated', type: 'boolean', default: true },
-		],
+		),
 	},
 
 	// Get, Get Many
@@ -278,21 +272,25 @@ export const operations: INodeProperties[] = [
 		placeholder: 'Add Option',
 		default: {},
 		displayOptions: { show: show(['get', 'getAll']) },
-		options: [
-			{
-				displayName: 'Include Assembly Details',
-				name: 'partDetail',
-				type: 'boolean',
-				default: true,
-				description: 'Whether to include the full assembly part object in each line',
-			},
-			{
-				displayName: 'Include Component Details',
-				name: 'subPartDetail',
-				type: 'boolean',
-				default: true,
-				description: 'Whether to include the full component part object in each line',
-			},
-		],
+		options: routeOptions(
+			'query',
+			[
+				{
+					displayName: 'Include Assembly Details',
+					name: 'partDetail',
+					type: 'boolean',
+					default: true,
+					description: 'Whether to include the full assembly part object in each line',
+				},
+				{
+					displayName: 'Include Component Details',
+					name: 'subPartDetail',
+					type: 'boolean',
+					default: true,
+					description: 'Whether to include the full component part object in each line',
+				},
+			],
+			{ partDetail: 'part_detail', subPartDetail: 'sub_part_detail' },
+		),
 	},
 ];
